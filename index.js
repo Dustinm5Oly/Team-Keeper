@@ -1,4 +1,4 @@
-const generateHTML = require('./src/generateHTML');
+
 
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
@@ -10,6 +10,7 @@ const inquirer = require('inquirer');
 const path = require("path");
 const DIST_DIR = path.resolve(__dirname, "dist");
 const distPath = path.join (DIST_DIR, "index.html");
+const generateHTML = require('./src/generateHTML');
 
 const teamMembers=[];
 
@@ -17,7 +18,7 @@ const idArray = [];
 
 console.log("Welcome to the team generator, follow the instructions to build your team!")
 
-function teamBuilder (){
+function teamBuilder(){
     function addManager (){
         inquirer.prompt ([
             {
@@ -73,7 +74,7 @@ function teamBuilder (){
                 answers.managerName, 
                 answers.managerId, 
                 answers.managerEmail, 
-                answers.managerOfficeNumber
+                answers.managerOfficeNumber,
             );
             teamMembers.push(manager);
             idArray.push(answers.managerId);
@@ -85,13 +86,16 @@ function teamBuilder (){
             {
                 type:`list`,
                 name: `selection`,
-                message: `Which type of team member would you like to add?`,
+                message: `Would you like to add another team member?`,
                 choices: [`Engineer`,`Intern`,`I don't want to add additional team members`],
 
             }
         ]) 
         .then ((userChoice) =>{
             switch(userChoice.selection){
+                case "Manager":
+                    addManager();
+                    break;
                 case "Engineer": 
                     addEngineer();
                     break;
@@ -150,8 +154,20 @@ function teamBuilder (){
                     }
                     return "Please enter a valid GitHub username.";
                 }
-            },
+            }, 
         ])
+        .then ((answers) => {
+            const engineer = new Engineer (
+                answers.engineerName, 
+                answers.engineerId, 
+                answers.engineerEmail, 
+                answers.engineerGitHub,
+            );
+            teamMembers.push(engineer);
+            idArray.push(answers.engineerId);
+            createTeam();
+        })
+    }
         function addIntern(){
             inquirer.prompt ([
                 {
@@ -199,20 +215,29 @@ function teamBuilder (){
                         }
                         return "Please enter a valid School name.";
                     }
-                },
+                }, 
             ])
-        .then ((answers) => {
-            const manager = new Manager (
-                answers.managerName, 
-                answers.managerId, 
-                answers.managerEmail, 
-                answers.managerOfficeNumber
-            );
-            teamMembers.push(manager);
-            idArray.push(answers.managerId);
-            createTeam();
-        })
-    }
-    addManager();
+            .then ((answers) => {
+                const intern = new Intern (
+                    answers.internName, 
+                    answers.internId, 
+                    answers.internEmail, 
+                    answers.internSchool,
+                );
+                teamMembers.push(intern);
+                idArray.push(answers.internId);
+                createTeam();
+            })
+    } addManager();
 }
-teamBuilder()
+
+function generatePage() {
+    console.log("Your team has been established!")
+    fs.writeFileSync(distPath, generateHTML(teamMembers, idArray), "utf-8")
+}
+
+teamBuilder();
+
+
+
+
