@@ -2,5 +2,26 @@
   "dependencies": {
     "inquirer": "^8.2.4",
     "jest": "^29.1.2"
-  }
+  },
+  "name": "team-keeper",
+  "description": "<h1 align=\"center\">Team-Keeper</h1>",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dustinm5Oly/Team-Keeper.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Dustinm5Oly/Team-Keeper/issues"
+  },
+  "homepage": "https://github.com/Dustinm5Oly/Team-Keeper#readme"
 }
